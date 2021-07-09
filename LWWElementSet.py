@@ -32,6 +32,7 @@ class LWWElementSet(object):
         return hashElement in self.addSet and isRemoveSetValid
     
     def getMembers(self):
+        ''' Returns all the valid members '''
         return [ data for data, _ in self.addSet.values() if self.isMember(data)]
         
     def mergeSet(self, set1, set2):

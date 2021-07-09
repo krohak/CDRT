@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, mock
 from datetime import datetime
 from context import LWWElementSet, hashObj
 
@@ -69,6 +69,16 @@ class LWWElementSetTests(TestCase):
         self.assertFalse(l.isMember(4))
         l.addElement(4)
         self.assertTrue(l.isMember(4))
+    
+    def testGetMembers(self):
+        l = LWWElementSet()
+        l.addElement(4)
+        l.removeElement(4)
+        l.addElement(4)
+        l.addElement(5)
+        l.addElement(6)
+        l.removeElement(5)
+        self.assertListEqual(l.getMembers(), [4, 6]) 
 
     def testMergeSet(self):
         c = LWWElementSet()
@@ -91,13 +101,14 @@ class LWWElementSetTests(TestCase):
         self.assertEqual(mergedRemoveSet[hashObj(4)][d.iTimestamp], removetime)
         self.assertEqual(mergedAddSet[hashObj(5)][d.iTimestamp], addTimeFive)
 
-    # mock mergeSet
-    def testMergeWith(self):
+    @mock.patch('LWWElementSet.LWWElementSet.mergeSet')
+    def testMergeWith(self, mockMergeSet):
+        mockMergeSet.return_value = {'foo':'bar'}
         c = LWWElementSet()
         d = LWWElementSet()
         c.mergeWith(d)
         self.assertDictEqual(c.addSet, {'foo':'bar'})
-        self.assertDictEqual(c.removeSet, {'foo1':'bar1'})
+        self.assertDictEqual(c.removeSet, {'foo':'bar'})
 
     def testComplexObjectAdd(self):
         c = LWWElementSet()
@@ -116,6 +127,16 @@ class LWWElementSetTests(TestCase):
         self.assertTrue(hashObj(self.complexObj1) in c.removeSet)
         self.assertFalse(c.isMember(self.complexObj1))
     
+    def testComplexGetMembers(self):
+        l = LWWElementSet()
+        l.addElement(set([4,5]))
+        l.removeElement(set([4,5]))
+        l.addElement(set([4,5]))
+        l.addElement(set([5,6]))
+        l.addElement(set([6,7]))
+        l.removeElement(set([5,6]))
+        self.assertListEqual(l.getMembers(), [set([4,5]), set([6,7])]) 
+
     def testComplexObjectMegeSet(self):
         c = LWWElementSet()
         d = LWWElementSet()
