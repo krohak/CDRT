@@ -5,6 +5,8 @@ def hashObj(data):
     return sha1(repr(data).encode('utf-8')).hexdigest()
 
 class LWWElementSet(object):
+
+    # TODO: input a type parameter, check against that type in all methods
     def __init__(self, addSet=None, removeSet=None):
         self.addSet = addSet if addSet else {}
         self.removeSet = removeSet if removeSet else {}
@@ -35,18 +37,18 @@ class LWWElementSet(object):
         ''' Returns all the valid members '''
         return [ data for data, _ in self.addSet.values() if self.isMember(data)]
         
-    def mergeSet(self, set1, set2):
+    def mergeSet(self, selfSet, otherSet):
         ''' Prioritize Last Write '''
         merged = {}
-        for hashElement in set(set1.keys()).union(set(set2.keys())):
-            if hashElement in set1 and hashElement in set2:
-                element1, element2 = set1[hashElement], set2[hashElement]
+        for hashElement in set(selfSet.keys()).union(set(otherSet.keys())):
+            if hashElement in selfSet and hashElement in otherSet:
+                element1, element2 = selfSet[hashElement], otherSet[hashElement]
                 # reverse, take max by timestamp, then reverse back.
                 merged[hashElement] = max(element1[::-1], element2[::-1])[::-1] 
-            elif hashElement in set1:
-                merged[hashElement] = set1[hashElement]
+            elif hashElement in selfSet:
+                merged[hashElement] = selfSet[hashElement]
             else:
-                merged[hashElement] = set2[hashElement]
+                merged[hashElement] = otherSet[hashElement]
         return merged
                 
     def mergeWith(self, otherLWWElementSet):

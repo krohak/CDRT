@@ -3,7 +3,7 @@ from datetime import datetime
 from context import LWWElementSet, hashObj
 
 class LWWElementSetTests(TestCase):
-
+        
     def __init__(self, *args, **kwargs):
         super(LWWElementSetTests, self).__init__(*args, **kwargs)
         self.complexObj1 = [{
@@ -30,6 +30,8 @@ class LWWElementSetTests(TestCase):
                     'ABS_MT_PRESSURE': '7869040953',
                 }
         }]
+
+    # TODO: beforeeach, aftereach
 
     def testInit(self):
         l = LWWElementSet()
