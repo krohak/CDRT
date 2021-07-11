@@ -3,7 +3,7 @@ from datetime import datetime
 from collections import defaultdict
 from context import LWWElementGraph, LWWElementSet, hashObj
 
-class LWWElementSetTests(TestCase):
+class LWWElementGraphTests(TestCase):
 
     def testInit(self):
         ''' '''
@@ -119,9 +119,40 @@ class LWWElementSetTests(TestCase):
         g = LWWElementGraph()
         self.assertListEqual(g.findPath(1, 7), [1, 2, 3, 5, 7])
     
+    @mock.patch('LWWElementGraph.LWWElementGraph._computeGraph')
+    @mock.patch('LWWElementSet.LWWElementSet.mergeWith')
+    @mock.patch('LWWElementSet.LWWElementSet.getMembers')
+    def testMergeGraphs(self, mockGetMembers, mockSetMergeWith, _mockComputeGraph):
+        ''' '''
+        mockGetMembers.return_value = {'mock-members'}
+        g1 = LWWElementGraph()
+        g2 = LWWElementGraph()
+        g1.mergeGraphs(g2)
+        calls = [mock.call(g2.vertices), mock.call(g2.edges)]
+        mockSetMergeWith.assert_has_calls(calls)
+        _mockComputeGraph.assert_called_once_with({'mock-members'}, {'mock-members'})
+    
+    #TODO: test_removeVertex
+    def test_removeVertex(self):
+        pass
+
+    #TODO: test_addEdge
+    def test_addEdge(self):
+        pass
+    
+    #TODO: test_removeEdge
+    def test_removeEdge(self):
+        pass
+
+    #TODO: test_computeGraph
+    def test_computeGraph(self):
+        pass
+
+class LWWElementGraphTestsComplex(TestCase):   
     @mock.patch('LWWElementGraph.LWWElementGraph.getNeighborsOf')
     def testFindPathComplexObject(self, mockGetNeighborsOf):
         ''' '''
+
         class ComplexObject(object):
             def __init__(self, x, y):
                 self.x = x
@@ -153,9 +184,3 @@ class LWWElementSetTests(TestCase):
 
     # TODO: add test case in BFS for complex objects
 
-    @mock.patch('LWWElementGraph.LWWElementGraph._computeGraph')
-    @mock.patch('LWWElementSet.LWWElementSet.mergeWith')
-    def testMergeGraphs(self, mockSetMergeWith, _mockComputeGraph):
-        ''' '''
-        pass
-    
