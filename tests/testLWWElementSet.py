@@ -37,12 +37,6 @@ class LWWElementSetTests(TestCase):
         self.assertEqual(len(l.addSet), 0)
         self.assertEqual(len(l.removeSet), 0)
 
-    def testInitWithArgs(self):
-        ''' '''
-        l = LWWElementSet({3:3}, {4:4})
-        self.assertDictEqual(l.addSet, {3:3})
-        self.assertDictEqual(l.removeSet, {4:4})
-
     def testAddElement(self):
         ''' '''
         l = LWWElementSet()

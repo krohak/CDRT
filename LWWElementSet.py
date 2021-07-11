@@ -7,11 +7,10 @@ def hashObj(data):
 class LWWElementSet(object):
 
     # TODO: type checking
-    # TODO: Maybe remove addSet and removeSet in the constructor
-    def __init__(self, addSet=None, removeSet=None):
+    def __init__(self):
         ''' '''
-        self.addSet = addSet if addSet else {}
-        self.removeSet = removeSet if removeSet else {}
+        self.addSet = {}
+        self.removeSet = {}
         self.iData = 0
         self.iTimestamp = 1
     
