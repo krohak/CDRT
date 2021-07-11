@@ -15,10 +15,10 @@ class LWWElementGraphTests(TestCase):
     def testAddVertex(self, mockSetAddElement):
         ''' '''
         g = LWWElementGraph()
-        g.graph = mock.MagicMock()
+        g.graphState = mock.MagicMock()
         g.addVertex('a')
         mockSetAddElement.assert_called_once_with('a')
-        g.graph.__getitem__.assert_called_with(hashObj('a'))
+        g.graphState.__getitem__.assert_called_with(hashObj('a'))
 
     @mock.patch('LWWElementSet.LWWElementSet.isMember')
     def testRemoveFails(self, mockIsMember):
@@ -82,7 +82,7 @@ class LWWElementGraphTests(TestCase):
     def testIsMember(self):
         ''' '''
         g = LWWElementGraph()
-        g.graph = {hashObj('a'): set()}
+        g.graphState = {hashObj('a'): set()}
         self.assertTrue(g.isMember('a'))
         self.assertFalse(g.isMember('b'))
 
@@ -99,7 +99,7 @@ class LWWElementGraphTests(TestCase):
         ''' '''
         mockGraphIsMember.return_value = True
         g = LWWElementGraph()
-        g.graph = {hashObj(1): {2, 3, 4}, hashObj(2): {1}}
+        g.graphState = {hashObj(1): {2, 3, 4}, hashObj(2): {1}}
         self.assertSetEqual(g.getNeighborsOf(1), {2,3,4})
         self.assertSetEqual(g.getNeighborsOf(2), {1})
 
@@ -132,28 +132,54 @@ class LWWElementGraphTests(TestCase):
         mockSetMergeWith.assert_has_calls(calls)
         _mockComputeGraph.assert_called_once_with({'mock-members'}, {'mock-members'})
     
-    #TODO: test_removeVertex
-    def test_removeVertex(self):
-        pass
+    @mock.patch('LWWElementGraph.hashObj')
+    def test_removeVertex(self, mockHash):
+        mockHash.side_effect = lambda x: x
+        graphState = {
+            1: {2, 4}, 
+            2: {1, 3},
+            3: {2},
+            4: {1},
+        }
+        g = LWWElementGraph()
+        self.assertDictEqual(g._removeVertex(graphState, 2), {1: {4}, 3: set(), 4: {1}})
 
-    #TODO: test_addEdge
-    def test_addEdge(self):
-        pass
-    
-    #TODO: test_removeEdge
-    def test_removeEdge(self):
-        pass
+    @mock.patch('LWWElementGraph.hashObj')
+    def test_addEdge(self, mockHash):
+        mockHash.side_effect = lambda x: x
+        graphState = defaultdict(set)
+        g = LWWElementGraph()
+        self.assertDictEqual(g._addEdge(graphState, 1, 2), {1: {2}, 2: {1}})
+         
+    @mock.patch('LWWElementGraph.hashObj')
+    def test_removeEdge(self, mockHash):
+        mockHash.side_effect = lambda x: x
+        graphState = {1: {2}, 2: {1}}
+        g = LWWElementGraph()
+        self.assertDictEqual(g._removeEdge(graphState, 1, 2), {1: set(), 2: set()})
 
-    #TODO: test_computeGraph
-    def test_computeGraph(self):
-        pass
+    @mock.patch('LWWElementGraph.hashObj')
+    def test_computeGraph(self, mockHash):
+        mockHash.side_effect = lambda x: x
+        vertices = [1, 2, 3, 4, 5]
+        edges = [{1,2}, {1, 4}, {2,3}, {2,4}]
+        expectedGraphState = {
+            1: {2, 4}, 
+            2: {1, 3, 4},
+            3: {2},
+            4: {1, 2},
+            5: set()
+        }
+        g = LWWElementGraph()
+        l = g._computeGraph(vertices, edges)
+        self.assertDictEqual(l, expectedGraphState)
 
 class LWWElementGraphTestsComplexObject(TestCase):   
     @mock.patch('LWWElementGraph.LWWElementGraph.getNeighborsOf')
     def testFindPathComplexObject(self, mockGetNeighborsOf):
         ''' '''
 
-        class ComplexObject(object):
+        class ComplexClass(object):
             def __init__(self, x, y):
                 self.x = x
                 self.y = y
@@ -161,13 +187,13 @@ class LWWElementGraphTestsComplexObject(TestCase):
             def foo(self):
                 pass
 
-        a = ComplexObject(1,2)
-        b = ComplexObject(1,3)
-        c = ComplexObject(4,6)
-        d = ComplexObject(5,7)
-        e = ComplexObject(3,9)
-        f = ComplexObject(8,3)
-        h = ComplexObject(5,21)
+        a = ComplexClass(1,2)
+        b = ComplexClass(1,3)
+        c = ComplexClass(4,6)
+        d = ComplexClass(5,7)
+        e = ComplexClass(3,9)
+        f = ComplexClass(8,3)
+        h = ComplexClass(5,21)
 
         graph = {
             hashObj(a): {b}, 

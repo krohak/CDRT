@@ -11,15 +11,15 @@ class LWWElementGraph(object):
         self.edges = LWWElementSet()
         # to optimize getNeighborsOf and findPath, 
         # maintaining a live updating internal state
-        self.graph = defaultdict(set)
+        self.graphState = defaultdict(set)
 
     def __repr__(self):
-        return "Graph: \n{} \nHistory: \nVertices: \n{}\n Edges: \n{}".format(self.graph, self.vertices, self.edges) 
+        return "Graph: \n{} \nHistory: \nVertices: \n{}\n Edges: \n{}".format(self.graphState, self.vertices, self.edges) 
 
     def addVertex(self, vertex):
         ''' '''
         self.vertices.addElement(vertex)
-        self.graph[hashObj(vertex)]
+        self.graphState[hashObj(vertex)]
 
     def removeVertex(self, vertex):
         ''' '''
@@ -28,7 +28,7 @@ class LWWElementGraph(object):
         self.vertices.removeElement(vertex)
         for edgeSet in self.edges.getMembers():
             self.edges.removeElement(edgeSet) if vertex in edgeSet else None
-        self.graph = self._removeVertex(self.graph, vertex)
+        self.graphState = self._removeVertex(self.graphState, vertex)
         
     def addEdge(self, vertex1, vertex2):
         ''' '''
@@ -37,7 +37,7 @@ class LWWElementGraph(object):
         elif not self.vertices.isMember(vertex2):
             raise KeyError("Vertex {} not in LWWElementGraph".format(vertex2))
         self.edges.addElement({vertex1, vertex2})
-        self.graph = self._addEdge(self.graph, vertex1, vertex2)
+        self.graphState = self._addEdge(self.graphState, vertex1, vertex2)
 
     def removeEdge(self, vertex1, vertex2):
         ''' '''
@@ -45,17 +45,17 @@ class LWWElementGraph(object):
         if not self.edges.isMember(edgeSet):
             raise KeyError("Edge {}-{} not in LWWElementGraph".format(vertex1, vertex2))
         self.edges.removeElement(edgeSet)
-        self.graph = self._removeEdge(self.graph, vertex1, vertex2)
+        self.graphState = self._removeEdge(self.graphState, vertex1, vertex2)
 
     def isMember(self, vertex):
         ''' '''
-        return hashObj(vertex) in self.graph
+        return hashObj(vertex) in self.graphState
 
     def getNeighborsOf(self, vertex):
         ''' '''
         if not self.isMember(vertex):
             raise KeyError("Vertex {} not in LWWElementGraph".format(vertex))
-        return self.graph[hashObj(vertex)]
+        return self.graphState[hashObj(vertex)]
 
     def findPath(self, vertex1, vertex2):
         ''' Perform BFS '''
@@ -81,29 +81,29 @@ class LWWElementGraph(object):
         ''' '''
         self.vertices.mergeWith(otherGraph.vertices)
         self.edges.mergeWith(otherGraph.edges)
-        self.graph = self._computeGraph(self.vertices.getMembers(), self.edges.getMembers())
+        self.graphState = self._computeGraph(self.vertices.getMembers(), self.edges.getMembers())
 
-    def _removeVertex(self, graph, vertex):
+    def _removeVertex(self, graphState, vertex):
         ''' '''
-        del graph[hashObj(vertex)]
-        for k in graph.keys(): graph[k].discard(vertex)
-        return graph
+        del graphState[hashObj(vertex)]
+        for k in graphState.keys(): graphState[k].discard(vertex)
+        return graphState
 
-    def _addEdge(self, graph, vertex1, vertex2):
+    def _addEdge(self, graphState, vertex1, vertex2):
         ''' '''
-        graph[hashObj(vertex1)].add(vertex2)
-        graph[hashObj(vertex2)].add(vertex1)
-        return graph
+        graphState[hashObj(vertex1)].add(vertex2)
+        graphState[hashObj(vertex2)].add(vertex1)
+        return graphState
 
-    def _removeEdge(self, graph, vertex1, vertex2):
+    def _removeEdge(self, graphState, vertex1, vertex2):
         ''' '''
-        graph[hashObj(vertex1)].remove(vertex2)
-        graph[hashObj(vertex2)].remove(vertex1)
-        return graph
+        graphState[hashObj(vertex1)].remove(vertex2)
+        graphState[hashObj(vertex2)].remove(vertex1)
+        return graphState
 
     def _computeGraph(self, vertices, edges):
         ''' '''
-        graph = defaultdict(set)
-        for v in vertices: graph[hashObj(v)]
-        for a,b in edges: graph[hashObj(a)].add(b); graph[hashObj(b)].add(a)
-        return graph
+        graphState = defaultdict(set)
+        for v in vertices: graphState[hashObj(v)] # initialize the vertices first, since there can some with no edges
+        for a,b in edges: graphState[hashObj(a)].add(b); graphState[hashObj(b)].add(a)
+        return graphState
