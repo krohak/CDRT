@@ -148,7 +148,7 @@ class LWWElementGraphTests(TestCase):
     def test_computeGraph(self):
         pass
 
-class LWWElementGraphTestsComplex(TestCase):   
+class LWWElementGraphTestsComplexObject(TestCase):   
     @mock.patch('LWWElementGraph.LWWElementGraph.getNeighborsOf')
     def testFindPathComplexObject(self, mockGetNeighborsOf):
         ''' '''

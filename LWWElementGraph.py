@@ -9,8 +9,12 @@ class LWWElementGraph(object):
         ''' '''
         self.vertices = LWWElementSet()
         self.edges = LWWElementSet()
-        # to optimize getNeighborsOf and findPath, maintaining a live updating internal state
-        self.graph = defaultdict(set) 
+        # to optimize getNeighborsOf and findPath, 
+        # maintaining a live updating internal state
+        self.graph = defaultdict(set)
+
+    def __repr__(self):
+        return "Graph: \n{} \nHistory: \nVertices: \n{}\n Edges: \n{}".format(self.graph, self.vertices, self.edges) 
 
     def addVertex(self, vertex):
         ''' '''
@@ -32,12 +36,12 @@ class LWWElementGraph(object):
             raise KeyError("Vertex {} not in LWWElementGraph".format(vertex1))
         elif not self.vertices.isMember(vertex2):
             raise KeyError("Vertex {} not in LWWElementGraph".format(vertex2))
-        self.edges.addElement(set([vertex1, vertex2]))
+        self.edges.addElement({vertex1, vertex2})
         self.graph = self._addEdge(self.graph, vertex1, vertex2)
 
     def removeEdge(self, vertex1, vertex2):
         ''' '''
-        edgeSet = set([vertex1, vertex2])
+        edgeSet = {vertex1, vertex2}
         if not self.edges.isMember(edgeSet):
             raise KeyError("Edge {}-{} not in LWWElementGraph".format(vertex1, vertex2))
         self.edges.removeElement(edgeSet)
@@ -79,7 +83,7 @@ class LWWElementGraph(object):
         self.edges.mergeWith(otherGraph.edges)
         self.graph = self._computeGraph(self.vertices.getMembers(), self.edges.getMembers())
 
-    def _removeVertex(self, vertex, graph):
+    def _removeVertex(self, graph, vertex):
         ''' '''
         del graph[hashObj(vertex)]
         for k in graph.keys(): graph[k].discard(vertex)
@@ -100,6 +104,6 @@ class LWWElementGraph(object):
     def _computeGraph(self, vertices, edges):
         ''' '''
         graph = defaultdict(set)
-        for v in vertices: graph[v]
+        for v in vertices: graph[hashObj(v)]
         for a,b in edges: graph[hashObj(a)].add(b); graph[hashObj(b)].add(a)
         return graph
