@@ -3,7 +3,7 @@ from datetime import datetime
 from context import LWWElementSet, hashObj
 
 class LWWElementSetTests(TestCase):
-        
+
     def __init__(self, *args, **kwargs):
         super(LWWElementSetTests, self).__init__(*args, **kwargs)
         self.complexObj1 = [{
@@ -30,8 +30,6 @@ class LWWElementSetTests(TestCase):
                     'ABS_MT_PRESSURE': '7869040953',
                 }
         }]
-
-    # TODO: beforeeach, aftereach
 
     def testInit(self):
         l = LWWElementSet()
@@ -87,6 +85,8 @@ class LWWElementSetTests(TestCase):
         c.addElement(4)
         c.removeElement(4)
         c.addElement(4)
+        c.addElement(3)
+        addTimeThree = c.addSet[hashObj(3)][c.iTimestamp]
 
         d = LWWElementSet()
         d.addElement(4)
@@ -102,6 +102,7 @@ class LWWElementSetTests(TestCase):
         self.assertEqual(mergedAddSet[hashObj(4)][d.iTimestamp], addTime)
         self.assertEqual(mergedRemoveSet[hashObj(4)][d.iTimestamp], removetime)
         self.assertEqual(mergedAddSet[hashObj(5)][d.iTimestamp], addTimeFive)
+        self.assertEqual(mergedAddSet[hashObj(3)][c.iTimestamp], addTimeThree)
 
     @mock.patch('LWWElementSet.LWWElementSet.mergeSet')
     def testMergeWith(self, mockMergeSet):

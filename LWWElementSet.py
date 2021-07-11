@@ -6,7 +6,7 @@ def hashObj(data):
 
 class LWWElementSet(object):
 
-    # TODO: input a type parameter, check against that type in all methods
+    # TODO: type checking
     def __init__(self, addSet=None, removeSet=None):
         self.addSet = addSet if addSet else {}
         self.removeSet = removeSet if removeSet else {}
@@ -41,14 +41,9 @@ class LWWElementSet(object):
         ''' Prioritize Last Write '''
         merged = {}
         for hashElement in set(selfSet.keys()).union(set(otherSet.keys())):
-            if hashElement in selfSet and hashElement in otherSet:
-                element1, element2 = selfSet[hashElement], otherSet[hashElement]
-                # reverse, take max by timestamp, then reverse back.
-                merged[hashElement] = max(element1[::-1], element2[::-1])[::-1] 
-            elif hashElement in selfSet:
-                merged[hashElement] = selfSet[hashElement]
-            else:
-                merged[hashElement] = otherSet[hashElement]
+            minElement = (None, datetime.min)
+            element1, element2 = selfSet.get(hashElement, minElement), otherSet.get(hashElement, minElement)
+            merged[hashElement] = max(element1[::-1], element2[::-1])[::-1]
         return merged
                 
     def mergeWith(self, otherLWWElementSet):
