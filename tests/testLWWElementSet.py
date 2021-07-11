@@ -32,16 +32,19 @@ class LWWElementSetTests(TestCase):
         }]
 
     def testInit(self):
+        ''' '''
         l = LWWElementSet()
         self.assertEqual(len(l.addSet), 0)
         self.assertEqual(len(l.removeSet), 0)
 
     def testInitWithArgs(self):
+        ''' '''
         l = LWWElementSet({3:3}, {4:4})
         self.assertDictEqual(l.addSet, {3:3})
         self.assertDictEqual(l.removeSet, {4:4})
 
     def testAddElement(self):
+        ''' '''
         l = LWWElementSet()
         l.addElement(4)
         self.assertTrue(hashObj(4) in l.addSet)
@@ -49,11 +52,13 @@ class LWWElementSetTests(TestCase):
         self.assertEqual(l.addSet[hashObj(4)][l.iData], 4)
     
     def testRemoveBeforeAdd(self):
+        ''' '''
         l = LWWElementSet()
         with self.assertRaises(KeyError):
             l.removeElement(4)
 
     def testRemoveElement(self):
+        ''' '''
         l = LWWElementSet()
         l.addElement(4)
         l.removeElement(4)
@@ -62,6 +67,7 @@ class LWWElementSetTests(TestCase):
         self.assertEqual(l.removeSet[hashObj(4)][l.iData], 4)
 
     def testIsMember(self):
+        ''' '''
         l = LWWElementSet()
         l.addElement(4)
         self.assertTrue(l.isMember(4))
@@ -71,6 +77,7 @@ class LWWElementSetTests(TestCase):
         self.assertTrue(l.isMember(4))
     
     def testGetMembers(self):
+        ''' '''
         l = LWWElementSet()
         l.addElement(4)
         l.removeElement(4)
@@ -81,6 +88,7 @@ class LWWElementSetTests(TestCase):
         self.assertListEqual(l.getMembers(), [4, 6]) 
 
     def testMergeSet(self):
+        ''' '''
         c = LWWElementSet()
         c.addElement(4)
         c.removeElement(4)
@@ -106,6 +114,7 @@ class LWWElementSetTests(TestCase):
 
     @mock.patch('LWWElementSet.LWWElementSet.mergeSet')
     def testMergeWith(self, mockMergeSet):
+        ''' '''
         mockMergeSet.return_value = {'foo':'bar'}
         c = LWWElementSet()
         d = LWWElementSet()
@@ -114,12 +123,14 @@ class LWWElementSetTests(TestCase):
         self.assertDictEqual(c.removeSet, {'foo':'bar'})
 
     def testComplexObjectAdd(self):
+        ''' '''
         c = LWWElementSet()
         c.addElement(self.complexObj1)
         self.assertTrue(hashObj(self.complexObj1) in c.addSet)
         self.assertTrue(c.isMember(self.complexObj1))
 
     def testComplexObjectRemove(self):
+        ''' '''
         c = LWWElementSet()
 
         with self.assertRaises(KeyError):
@@ -131,6 +142,7 @@ class LWWElementSetTests(TestCase):
         self.assertFalse(c.isMember(self.complexObj1))
     
     def testComplexGetMembers(self):
+        ''' '''
         l = LWWElementSet()
         l.addElement(set([4,5]))
         l.removeElement(set([4,5]))
@@ -141,6 +153,7 @@ class LWWElementSetTests(TestCase):
         self.assertListEqual(l.getMembers(), [set([4,5]), set([6,7])]) 
 
     def testComplexObjectMegeSet(self):
+        ''' '''
         c = LWWElementSet()
         d = LWWElementSet()
 
