@@ -33,6 +33,21 @@ class IntegrationTests(TestCase):
         self.assertListEqual(firstGraph.findPath(1, 7), [1, 2, 3, 5, 7])
         firstGraph.addEdge(1, 8); firstGraph.addEdge(7, 8)
         self.assertListEqual(firstGraph.findPath(1, 7), [1, 8, 7])
+    
+    def testMergeCommutativity(self):
+        pass
+
+    def testMergeIdempotency(self):
+        pass
+    
+    def testMergeAssociativity(self):
+        pass
+
+    def testMergeAddCommutativity(self):
+        pass
+
+    def testMergeWithCompliment(self):
+        pass
 
 class IntegrationTestsComplexObject(TestCase):
     pass
