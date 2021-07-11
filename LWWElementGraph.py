@@ -3,7 +3,6 @@ from LWWElementSet import LWWElementSet, hashObj
 
 class LWWElementGraph(object):
     
-    # TODO: Insert vertices and edge set in constructor, for testing and mergeGraphs
     # TODO: type checking
     def __init__(self):
         ''' '''
