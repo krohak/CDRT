@@ -5,7 +5,7 @@ class LWWElementGraph(object):
     
     # TODO: type checking
     def __init__(self):
-        ''' '''
+        # TODO: DOCUMENTATION ''' '''
         self.vertices = LWWElementSet()
         self.edges = LWWElementSet()
         # to optimize getNeighborsOf and findPath, 
@@ -80,6 +80,10 @@ class LWWElementGraph(object):
         ''' '''
         self.vertices.mergeWith(otherGraph.vertices)
         self.edges.mergeWith(otherGraph.edges)
+        # go through all edges.members, remove edge if vertex not present anymore
+        for v1, v2 in self.edges.getMembers():
+            if not self.vertices.isMember(v1) or not self.vertices.isMember(v2):
+                self.edges.removeElement({v1, v2})
         self.graphState = self._computeGraph(self.vertices.getMembers(), self.edges.getMembers())
 
     def _removeVertex(self, graphState, vertex):

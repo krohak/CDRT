@@ -120,17 +120,19 @@ class LWWElementGraphTests(TestCase):
         self.assertListEqual(g.findPath(1, 7), [1, 2, 3, 5, 7])
     
     @mock.patch('LWWElementGraph.LWWElementGraph._computeGraph')
-    @mock.patch('LWWElementSet.LWWElementSet.mergeWith')
-    @mock.patch('LWWElementSet.LWWElementSet.getMembers')
-    def testMergeGraphs(self, mockGetMembers, mockSetMergeWith, _mockComputeGraph):
+    def testMergeGraphs(self, _mockComputeGraph):
         ''' '''
-        mockGetMembers.return_value = {'mock-members'}
-        g1 = LWWElementGraph()
+        g1 = LWWElementGraph()        
+        g1.vertices, g1.edges = mock.MagicMock(), mock.MagicMock()
+        g1.vertices.getMembers.return_value = ['v1'] 
+        g1.edges.getMembers.return_value = [{'v1', 'v2'}]
+        g1.vertices.isMember.return_value = False
         g2 = LWWElementGraph()
         g1.mergeGraphs(g2)
-        calls = [mock.call(g2.vertices), mock.call(g2.edges)]
-        mockSetMergeWith.assert_has_calls(calls)
-        _mockComputeGraph.assert_called_once_with({'mock-members'}, {'mock-members'})
+        g1.vertices.mergeWith.assert_has_calls([mock.call(g2.vertices)])
+        g1.edges.mergeWith.assert_has_calls([mock.call(g2.edges)])
+        g1.edges.removeElement.assert_called_once_with({'v1', 'v2'})
+        _mockComputeGraph.assert_called_once_with(['v1'], [{'v1', 'v2'}])
     
     @mock.patch('LWWElementGraph.hashObj')
     def test_removeVertex(self, mockHash):
