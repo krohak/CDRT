@@ -1,7 +1,18 @@
 from unittest import TestCase, mock
 from datetime import datetime
 from collections import defaultdict
+from random import random
 from context import LWWElementGraph, LWWElementSet, hashObj
+
+def createComplexObj():
+    return [{
+            'timestamp' : [ random() * 10**4],
+            'event': {
+                    'ABS_MT_POSITION_X': '{}'.format(int(random() * 10**8)),
+                    'ABS_MT_POSITION_Y': '{}'.format(int(random() * 10**8)),
+                    'ABS_MT_PRESSURE': '{}'.format(int(random() * 10**8)),
+                }
+    }]
 
 class LWWElementGraphTests(TestCase):
 

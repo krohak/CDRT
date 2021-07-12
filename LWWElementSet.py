@@ -6,9 +6,9 @@ def hashObj(data):
 
 class LWWElementSet(object):
 
-    # TODO: type checking
     def __init__(self):
-        ''' '''
+        ''' Initialize addSet and removeSet to empty dictionary. iData and iTimestamp 
+            are the index of the data and timestamp respectively'''
         self.addSet = {}
         self.removeSet = {}
         self.iData = 0
@@ -35,11 +35,12 @@ class LWWElementSet(object):
         return hashElement in self.addSet and isRemoveSetValid
     
     def getMembers(self):
-        ''' Returns all the valid members '''
+        ''' Returns all the valid members. Go through addSet, check if it is a member '''
         return [ data for data, _ in self.addSet.values() if self.isMember(data)]
         
     def mergeSet(self, selfSet, otherSet):
-        ''' Prioritize Last Write '''
+        ''' Prioritize Last Write. Since elements are in the form (data, datetime), reverse them to
+            compare by datetime and take max. Then, reverse back the max and store in merged '''
         merged = {}
         for hashElement in set(selfSet.keys()).union(set(otherSet.keys())):
             minElement = (None, datetime.min)
@@ -48,7 +49,7 @@ class LWWElementSet(object):
         return merged
                 
     def mergeWith(self, otherLWWElementSet):
-        ''' merge self with otherLWWElementSet in LWW manner '''
+        ''' Merge self with otherLWWElementSet in LWW manner '''
         self.addSet = self.mergeSet(self.addSet, otherLWWElementSet.addSet)
         self.removeSet = self.mergeSet(self.removeSet, otherLWWElementSet.removeSet)
         

@@ -3,7 +3,6 @@ from LWWElementSet import LWWElementSet, hashObj
 
 class LWWElementGraph(object):
     
-    # TODO: type checking
     def __init__(self):
         # TODO: DOCUMENTATION ''' '''
         self.vertices = LWWElementSet()
@@ -58,9 +57,7 @@ class LWWElementGraph(object):
 
     def findPath(self, vertex1, vertex2):
         ''' Perform BFS '''
-        frontier = [vertex1]
-        explored = set()
-        ancestory = {}
+        frontier, explored, ancestory = [vertex1], set(), {}
         while frontier:
             node = frontier.pop(0)
             explored.add(node)
@@ -77,10 +74,10 @@ class LWWElementGraph(object):
         return []
 
     def mergeGraphs(self, otherGraph):
-        ''' '''
+        ''' Merging Graphs by merging their Vertice and Edge LLWSet. Remove Edge if Vertex not present
+            anymore after merge. Recompute the internal graphState as well. Runs in O(E + V)'''
         self.vertices.mergeWith(otherGraph.vertices)
         self.edges.mergeWith(otherGraph.edges)
-        # go through all edges.members, remove edge if vertex not present anymore
         for v1, v2 in self.edges.getMembers():
             if not self.vertices.isMember(v1) or not self.vertices.isMember(v2):
                 self.edges.removeElement({v1, v2})
@@ -105,8 +102,9 @@ class LWWElementGraph(object):
         return graphState
 
     def _computeGraph(self, vertices, edges):
-        ''' '''
+        ''' Calculate the graphState using latest vertices and edges. Initialize the Vertices first, 
+            since there be some vertices with no edges'''
         graphState = defaultdict(set)
-        for v in vertices: graphState[hashObj(v)] # initialize the vertices first, since there can some with no edges
+        for v in vertices: graphState[hashObj(v)]
         for a,b in edges: graphState[hashObj(a)].add(b); graphState[hashObj(b)].add(a)
         return graphState

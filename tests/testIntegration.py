@@ -56,6 +56,7 @@ class IntegrationTests(TestCase):
         firstGraph.mergeGraphs(secondGraph)
         self.assertSetEqual(set(firstGraph.vertices.getMembers()), {1,2})
         self.assertListEqual(firstGraph.edges.getMembers(), [])
+        self.assertEqual(len(firstGraph.graphState), 2)
 
     def testRemovedEdgeMerge(self):
         ''' Removing an Edge on the Second Graph should  
@@ -74,6 +75,7 @@ class IntegrationTests(TestCase):
         firstGraph.mergeGraphs(secondGraph)
         self.assertSetEqual(set(firstGraph.vertices.getMembers()), {0,1,2,3})
         self.assertListEqual(firstGraph.edges.getMembers(), [])
+        self.assertEqual(len(firstGraph.graphState), 4)
         
     def testMergeCommutativity(self):
         ''' Testcase for ensuring that firstGraph merged with secondGraph
