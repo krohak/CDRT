@@ -4,10 +4,10 @@ from LWWElementSet import LWWElementSet, hashObj
 class LWWElementGraph(object):
     
     def __init__(self):
+        ''' Initializing Vertices and Edges as LWWElementSet. Maintaining live updating
+            graphState to optimize reads (getNeighborsOf, findPath) ''' 
         self.vertices = LWWElementSet()
         self.edges = LWWElementSet()
-        # to optimize getNeighborsOf and findPath, 
-        # maintaining a live updating internal state
         self.graphState = defaultdict(list)
 
     def __repr__(self):
