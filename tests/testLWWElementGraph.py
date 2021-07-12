@@ -6,7 +6,7 @@ from context import LWWElementGraph, LWWElementSet, hashObj
 
 def createComplexObj():
     return [{
-            'timestamp' : [ random() * 10**4],
+            'timestamp' : [ random() * 10**4 ],
             'event': {
                     'ABS_MT_POSITION_X': '{}'.format(int(random() * 10**8)),
                     'ABS_MT_POSITION_Y': '{}'.format(int(random() * 10**8)),
@@ -162,7 +162,7 @@ class LWWElementGraphTests(TestCase):
 
     @mock.patch('LWWElementGraph.hashObj')
     def test_addEdge(self, mockHash):
-        ''' Check if _addEdge appends the vertex in the other vertex's neighbor list '''
+        ''' Check if _addEdge appends the vertex in the other vertex's adjacency list '''
         mockHash.side_effect = lambda x: x
         graphState = defaultdict(list)
         g = LWWElementGraph()
@@ -170,7 +170,7 @@ class LWWElementGraphTests(TestCase):
          
     @mock.patch('LWWElementGraph.hashObj')
     def test_removeEdge(self, mockHash):
-        ''' Remove edge by deleting the vertice in the other's neighbor list '''
+        ''' Remove edge by deleting the vertice in the other's adjacency list '''
         mockHash.side_effect = lambda x: x
         graphState = {1: [2], 2: [1]}
         g = LWWElementGraph()
@@ -178,24 +178,52 @@ class LWWElementGraphTests(TestCase):
 
     @mock.patch('LWWElementGraph.hashObj')
     def test_computeGraph(self, mockHash):
+        ''' Check new computed graphState using vertices and edges
+            Initialize the vertices first, and then for each edge, add the vertices to 
+            each other's adjacency list in graphState '''
         mockHash.side_effect = lambda x: x
         vertices = [1, 2, 3, 4, 5]
         edges = [{1,2}, {1, 4}, {2,3}, {2,4}]
         expectedGraphState = {
-            1: {2, 4}, 
-            2: {1, 3, 4},
-            3: {2},
-            4: {1, 2},
-            5: set()
+            1: [2, 4], 
+            2: [1, 3, 4],
+            3: [2],
+            4: [1, 2],
+            5: list()
         }
         g = LWWElementGraph()
         l = g._computeGraph(vertices, edges)
         self.assertDictEqual(l, expectedGraphState)
 
-class LWWElementGraphTestsComplexObject(TestCase):   
+class LWWElementGraphTestsComplexObject(TestCase):
+
+    def test_removeVertexComplexObject(self):
+        ''' Check if _removeVertex updates the graphState by removing the vertex and 
+            its edges with other vertices for a graph with Complex data type (other than int, str) '''
+        a = createComplexObj()
+        b = createComplexObj()
+        c = createComplexObj()
+        d = createComplexObj()
+        graphState = {
+            hashObj(a): [b, d], 
+            hashObj(b): [a, c],
+            hashObj(c): [b],
+            hashObj(d): [a],
+        }
+        g = LWWElementGraph()
+        self.assertDictEqual(g._removeVertex(graphState, b), {hashObj(a): [d], hashObj(c): list(), hashObj(d): [a]})
+    
+    def test_removeEdgeComplexObject(self):
+        ''' Remove edge by deleting the vertice in the other's adjacency list  
+            for a graph with Complex data type (other than int, str)'''
+        a, b = createComplexObj(), createComplexObj()
+        graphState = {hashObj(a): [b], hashObj(b): [a]}
+        g = LWWElementGraph()
+        self.assertDictEqual(g._removeEdge(graphState, a, b), {hashObj(a): list(), hashObj(b): list()})
+
     @mock.patch('LWWElementGraph.LWWElementGraph.getNeighborsOf')
     def testFindPathComplexObject(self, mockGetNeighborsOf):
-        ''' '''
+        ''' Check if BFS runs correctly for a graph with Complex data type (other than int, str) '''
         a = createComplexObj()
         b = createComplexObj()
         c = createComplexObj()

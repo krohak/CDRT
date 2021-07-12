@@ -33,8 +33,8 @@ class IntegrationTests(TestCase):
 
         firstGraph.mergeGraphs(secondGraph)
         firstGraph.addEdge(2, 3)
-        self.assertSetEqual(firstGraph.getNeighborsOf(4), {2, 5})
-        self.assertListEqual(firstGraph.findPath(1, 7), [1, 2, 3, 5, 7])
+        self.assertSetEqual(set(firstGraph.getNeighborsOf(4)), {2, 5})
+        self.assertListEqual(firstGraph.findPath(1, 7), [1, 2, 4, 5, 7])
         firstGraph.addEdge(1, 8)
         firstGraph.addEdge(7, 8)
         self.assertListEqual(firstGraph.findPath(1, 7), [1, 8, 7])
@@ -113,6 +113,3 @@ class IntegrationTests(TestCase):
     def testMergeWithCompliment(self):
         pass
 
-
-class IntegrationTestsComplexObject(TestCase):
-    pass
