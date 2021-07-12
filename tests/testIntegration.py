@@ -3,9 +3,9 @@ from context import LWWElementGraph
 
 
 class IntegrationTests(TestCase):
-    ''' Although we are using unittest as the testing framework,
+    ''' Although we are using unittest as the testing framework in the project,
         I wanted to include integration tests which test out the behaviour of
-        LWWWElementGraph as a whole with edge cases. In the future, we can 
+        LWWWElementGraph as a whole, edge cases. In the future, we can 
         move these tests to an Integration Testing framework in Python '''
 
     def testMergeGraphAndPerformBFS(self):
@@ -98,18 +98,53 @@ class IntegrationTests(TestCase):
         g1.mergeGraphs(g2)
         g3, g4 = setupGraphs()
         g4.mergeGraphs(g3)
-        self.assertSetEqual(set(g1.vertices.getMembers()), set(g4.vertices.getMembers()))
-        self.assertListEqual(g1.edges.getMembers(), g4.edges.getMembers())
+        self.assertCountEqual(g1.vertices.getMembers(), g4.vertices.getMembers())
+        self.assertCountEqual(g1.edges.getMembers(), g4.edges.getMembers())
 
     def testMergeIdempotency(self):
-        pass
+        ''' Graph merged with itself should be the same graph ''' 
+        def setupGraph():
+            firstGraph = LWWElementGraph()
+            for i in range(4):
+                firstGraph.addVertex(i)
+            firstGraph.removeVertex(3)
+            firstGraph.addEdge(0, 1)
+            firstGraph.addEdge(1, 2)
+            firstGraph.addEdge(0, 2)
+            return firstGraph
+        
+        g1 = setupGraph()
+        g1.mergeGraphs(g1)
+        g2 = setupGraph()
+        self.assertCountEqual(g1.vertices.getMembers(), g2.vertices.getMembers())
+        self.assertCountEqual(g1.edges.getMembers(), g2.edges.getMembers())
 
     def testMergeAssociativity(self):
-        pass
+        ''' (A merge B) merge C should equal A merge (B merge C) ''' 
+        def setupGraphs():
+            firstGraph = LWWElementGraph()
+            secondGraph = LWWElementGraph()
+            thirdGraph = LWWElementGraph()
+            for i in range(4):
+                firstGraph.addVertex(i)
+                secondGraph.addVertex(i)
+            firstGraph.removeVertex(3)
+            secondGraph.removeVertex(0)
+            for i in range(4, 7):
+                thirdGraph.addVertex(i)
+            thirdGraph.removeVertex(5)
+            firstGraph.addEdge(0, 1)
+            secondGraph.addEdge(2, 3)
+            firstGraph.addEdge(1, 2)
+            return firstGraph, secondGraph, thirdGraph
+        
+        g1, g2, g3 = setupGraphs()
+        g1.mergeGraphs(g2)
+        g1.mergeGraphs(g3)
 
-    def testMergeAddCommutativity(self):
-        pass
+        g4, g5, g6 = setupGraphs()
+        g5.mergeGraphs(g6)
+        g4.mergeGraphs(g5)
 
-    def testMergeWithCompliment(self):
-        pass
-
+        self.assertCountEqual(g1.vertices.getMembers(), g4.vertices.getMembers())
+        self.assertCountEqual(g1.edges.getMembers(), g4.edges.getMembers())

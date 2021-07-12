@@ -5,6 +5,7 @@ from context import LWWElementSet, hashObj
 
 
 def createComplexObj():
+    ''' Outputs a complex Python dictionary obj with embedded dict, list, string and float '''
     return [{
             'timestamp' : [ random() * 10**4],
             'event': {
