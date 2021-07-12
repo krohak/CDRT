@@ -4,7 +4,6 @@ from LWWElementSet import LWWElementSet, hashObj
 class LWWElementGraph(object):
     
     def __init__(self):
-        # TODO: DOCUMENTATION ''' '''
         self.vertices = LWWElementSet()
         self.edges = LWWElementSet()
         # to optimize getNeighborsOf and findPath, 

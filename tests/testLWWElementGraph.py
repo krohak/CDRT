@@ -244,6 +244,3 @@ class LWWElementGraphTestsComplexObject(TestCase):
         mockGetNeighborsOf.side_effect = lambda x: graph[hashObj(x)]
         g = LWWElementGraph()
         self.assertListEqual(g.findPath(a, h), [a, b, c, e, h])
-
-    # TODO: add test case for complex objects
-
