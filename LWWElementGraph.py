@@ -64,6 +64,10 @@ class LWWElementGraph(object):
         ''' Perform BFS for shortest path. Uses graphState which was optimized for read
             to get all the neighbours of a vertex in O(1).
             Runs in O(V + E) '''
+        if not self.vertices.isMember(vertex1):
+            raise KeyError("Vertex {} not in LWWElementGraph".format(vertex1))
+        elif not self.vertices.isMember(vertex2):
+            raise KeyError("Vertex {} not in LWWElementGraph".format(vertex2))
         frontier, explored, ancestory = [vertex1], set(), {}
         while frontier:
             node = frontier.pop(0)
