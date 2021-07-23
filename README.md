@@ -15,10 +15,10 @@ Module for a lightweight LWWElementGraph, which uses LWWElementSet.
 Handles merges in a Last Write Wins Manner.
 
 ## tests
-/tests/context.py
-/tests/testLWWElementSet.py
-/tests/testLWWElementGraph.py
-/tests/testIntegration.py
+- /tests/context.py
+- /tests/testLWWElementSet.py
+- /tests/testLWWElementGraph.py
+- /tests/testIntegration.py
 
 
 Made by [krohak](https://github.com/krohak/)
