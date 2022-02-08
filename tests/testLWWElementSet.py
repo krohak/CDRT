@@ -1,7 +1,7 @@
 from unittest import TestCase, mock
 from datetime import datetime
 from random import random
-from context import LWWElementSet, hashObj
+from context import LWWElementSet, hashObj, SRC_PATH
 
 
 def createComplexObj():
@@ -23,7 +23,7 @@ class LWWElementSetTests(TestCase):
         self.assertDictEqual(l.addSet, {})
         self.assertDictEqual(l.removeSet, {})
 
-    @mock.patch('LWWElementSet.hashObj')
+    @mock.patch('{}.LWWElementSet.hashObj'.format(SRC_PATH))
     def testAddElement(self, mockHash):
         ''' Adding element adds to addSet with value as (data, datetime). '''
         mockHash.side_effect = lambda x: x
@@ -39,7 +39,7 @@ class LWWElementSetTests(TestCase):
         with self.assertRaises(KeyError):
             l.removeElement(4)
 
-    @mock.patch('LWWElementSet.hashObj')
+    @mock.patch('{}.LWWElementSet.hashObj'.format(SRC_PATH))
     def testRemoveElement(self, mockHash):
         ''' Removing element adds it in the removeSet with value as (data, datetime) '''
         mockHash.side_effect = lambda x: x
@@ -50,7 +50,7 @@ class LWWElementSetTests(TestCase):
         self.assertEqual(l.removeSet[4][l.iData], 4)
         self.assertTrue(isinstance(l.removeSet[4][l.iTimestamp], datetime))        
 
-    @mock.patch('LWWElementSet.hashObj')
+    @mock.patch('{}.LWWElementSet.hashObj'.format(SRC_PATH))
     def testIsMember(self, mockHash):
         ''' Adding to the addSet makes item member. Adding to the removeSet with a 
             greater timestamp removes its membership. Adding back to the addSet with greater
@@ -64,7 +64,7 @@ class LWWElementSetTests(TestCase):
         l.addSet[4] = (4, '20210711')
         self.assertTrue(l.isMember(4))
     
-    @mock.patch('LWWElementSet.LWWElementSet.isMember')
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
     def testGetMembers(self, mockIsMember):
         ''' getMembers should return valid members using isMember for each member in addSet '''
         mockIsMember.side_effect = [True, False, True]
@@ -93,7 +93,7 @@ class LWWElementSetTests(TestCase):
         self.assertEqual(mergedAddSet[5][d.iTimestamp], datetime(2021, 7, 11, 0, 0))
         self.assertEqual(mergedAddSet[3][c.iTimestamp], datetime(2021, 7, 11, 0, 0))
 
-    @mock.patch('LWWElementSet.LWWElementSet.mergeSet')
+    @mock.patch('{}.LWWElementSet.LWWElementSet.mergeSet'.format(SRC_PATH))
     def testMergeWith(self, mockMergeSet):
         ''' '''
         mockMergeSet.return_value = {'foo':'bar'}
@@ -126,7 +126,7 @@ class LWWElementSetTestsComplexObject(TestCase):
         c.removeElement(complexObj)
         self.assertTrue(hashObj(complexObj) in c.removeSet)
     
-    @mock.patch('LWWElementSet.LWWElementSet.isMember')
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
     def testComplexGetMembers(self, mockIsMember):
         ''' Testing getMembers with Complex Object. Need to store hash as the key in the addSet
             since Python objects like dict, set raise unhashable type error '''

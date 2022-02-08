@@ -2,7 +2,7 @@ from unittest import TestCase, mock
 from datetime import datetime
 from collections import defaultdict
 from random import random
-from context import LWWElementGraph, LWWElementSet, hashObj
+from context import LWWElementGraph, LWWElementSet, hashObj, SRC_PATH
 
 def createComplexObj():
     ''' Outputs a complex Python dictionary obj with embedded dict, list, string and float '''
@@ -23,7 +23,7 @@ class LWWElementGraphTests(TestCase):
         self.assertTrue(isinstance(g.vertices, LWWElementSet))
         self.assertTrue(isinstance(g.edges, LWWElementSet))
         
-    @mock.patch('LWWElementSet.LWWElementSet.addElement')
+    @mock.patch('{}.LWWElementSet.LWWElementSet.addElement'.format(SRC_PATH))
     def testAddVertex(self, mockSetAddElement):
         ''' Check if vertices.addElement is called '''
         g = LWWElementGraph()
@@ -32,18 +32,18 @@ class LWWElementGraphTests(TestCase):
         mockSetAddElement.assert_called_once_with('a')
         g.graphState.__getitem__.assert_called_with(hashObj('a'))
 
-    @mock.patch('LWWElementSet.LWWElementSet.isMember')
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
     def testRemoveFails(self, mockIsMember):
         ''' Cannot remove before adding vertex '''
         mockIsMember.return_value = False
         g = LWWElementGraph()
         with self.assertRaises(KeyError):
             g.removeVertex('a')
-            
-    @mock.patch('LWWElementGraph.LWWElementGraph._removeVertex')
-    @mock.patch('LWWElementSet.LWWElementSet.removeElement')
-    @mock.patch('LWWElementSet.LWWElementSet.getMembers')
-    @mock.patch('LWWElementSet.LWWElementSet.isMember')
+
+    @mock.patch('{}.LWWElementGraph.LWWElementGraph._removeVertex'.format(SRC_PATH))
+    @mock.patch('{}.LWWElementSet.LWWElementSet.removeElement'.format(SRC_PATH))
+    @mock.patch('{}.LWWElementSet.LWWElementSet.getMembers'.format(SRC_PATH))
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
     def testRemoveVertex(self, mockIsMember, mockGetMembers, mockSetRemoveElement, _mockGraphRemoveVertex):
         ''' Check remove vertex and all its edges. Also check if _removeVertex is called '''
         mockIsMember.return_value = True
@@ -54,17 +54,17 @@ class LWWElementGraphTests(TestCase):
         mockSetRemoveElement.assert_has_calls(calls)
         self.assertTrue(_mockGraphRemoveVertex.called)
 
-    @mock.patch('LWWElementSet.LWWElementSet.isMember')
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
     def testAddEdgeFails(self, mockIsMember):
         ''' Cannot add edge if vertex not present '''
         mockIsMember.return_value = False
         g = LWWElementGraph()
         with self.assertRaises(KeyError):
             g.addEdge('a', 'b')
-
-    @mock.patch('LWWElementGraph.LWWElementGraph._addEdge')
-    @mock.patch('LWWElementSet.LWWElementSet.isMember')
-    @mock.patch('LWWElementSet.LWWElementSet.addElement')
+    
+    @mock.patch('{}.LWWElementGraph.LWWElementGraph._addEdge'.format(SRC_PATH))
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
+    @mock.patch('{}.LWWElementSet.LWWElementSet.addElement'.format(SRC_PATH))
     def testAddEdge(self, mockSetAddElement, mockIsMember, _mockGraphAddEdge):
         ''' Check if addElement to edge LWWSet. Also check if _addEdge is called '''
         mockIsMember.return_value = True
@@ -73,7 +73,7 @@ class LWWElementGraphTests(TestCase):
         mockSetAddElement.assert_called_once_with({'a','b'})
         self.assertTrue(_mockGraphAddEdge.called)
 
-    @mock.patch('LWWElementSet.LWWElementSet.isMember')
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
     def testRemoveEdgeFails(self, mockIsMember):
         ''' Cannot remove edge if it doesnt exist '''
         mockIsMember.return_value = False
@@ -81,9 +81,9 @@ class LWWElementGraphTests(TestCase):
         with self.assertRaises(KeyError):
             g.removeEdge('a', 'b')
 
-    @mock.patch('LWWElementGraph.LWWElementGraph._removeEdge')
-    @mock.patch('LWWElementSet.LWWElementSet.isMember')
-    @mock.patch('LWWElementSet.LWWElementSet.removeElement')
+    @mock.patch('{}.LWWElementGraph.LWWElementGraph._removeEdge'.format(SRC_PATH))
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
+    @mock.patch('{}.LWWElementSet.LWWElementSet.removeElement'.format(SRC_PATH))
     def testRemoveEdge(self, mockSetRemoveElement, mockIsMember, _mockGraphRemoveEdge):
         ''' Check if removeElement in edge LWWSet. Also check if _removeEdge is called '''
         mockIsMember.return_value = True
@@ -98,7 +98,7 @@ class LWWElementGraphTests(TestCase):
         self.assertTrue(g.isMember('a'))
         self.assertFalse(g.isMember('b'))
 
-    @mock.patch('LWWElementGraph.LWWElementGraph.isMember')
+    @mock.patch('{}.LWWElementGraph.LWWElementGraph.isMember'.format(SRC_PATH))
     def testGetNeighborsOfFails(self, mockGraphIsMember):
         ''' Cannot getNeighboursOf if vertex not present '''
         mockGraphIsMember.return_value = False
@@ -106,7 +106,7 @@ class LWWElementGraphTests(TestCase):
         with self.assertRaises(KeyError):
             g.getNeighborsOf('a')
 
-    @mock.patch('LWWElementGraph.LWWElementGraph.isMember')
+    @mock.patch('{}.LWWElementGraph.LWWElementGraph.isMember'.format(SRC_PATH))
     def testGetNeighbors(self, mockGraphIsMember):
         ''' Check if getNeighboursOf accesses graphState '''
         mockGraphIsMember.return_value = True
@@ -115,8 +115,9 @@ class LWWElementGraphTests(TestCase):
         self.assertListEqual(g.getNeighborsOf(1), [2,3,4])
         self.assertListEqual(g.getNeighborsOf(2), [1])
 
-    @mock.patch('LWWElementGraph.LWWElementGraph.getNeighborsOf')
-    def testFindPath(self, mockGetNeighborsOf):
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
+    @mock.patch('{}.LWWElementGraph.LWWElementGraph.getNeighborsOf'.format(SRC_PATH))
+    def testFindPath(self, mockGetNeighborsOf, mockIsMember):
         ''' Check if BFS runs correctly, given custom graph '''
         graph = {
             1: [2], 
@@ -128,10 +129,12 @@ class LWWElementGraphTests(TestCase):
             7: [5, 6],
         }
         mockGetNeighborsOf.side_effect = lambda x: graph[x]
+        mockIsMember.return_value = True
+        print(mockGetNeighborsOf(2))
         g = LWWElementGraph()
         self.assertListEqual(g.findPath(1, 7), [1, 2, 3, 5, 7])
     
-    @mock.patch('LWWElementGraph.LWWElementGraph._computeGraph')
+    @mock.patch('{}.LWWElementGraph.LWWElementGraph._computeGraph'.format(SRC_PATH))
     def testMergeGraphs(self, _mockComputeGraph):
         ''' Check if vertices and edges are merged using LLWElementSet mergeWith
             Also check if _computeGraph is called with the right parameters '''
@@ -147,7 +150,7 @@ class LWWElementGraphTests(TestCase):
         g1.edges.removeElement.assert_called_once_with({'v1', 'v2'})
         _mockComputeGraph.assert_called_once_with(['v1'], [{'v1', 'v2'}])
     
-    @mock.patch('LWWElementGraph.hashObj')
+    @mock.patch('{}.LWWElementGraph.hashObj'.format(SRC_PATH))
     def test_removeVertex(self, mockHash):
         ''' Check if _removeVertex updates the graphState by removing the vertex and 
             its edges with other vertices. '''
@@ -161,7 +164,7 @@ class LWWElementGraphTests(TestCase):
         g = LWWElementGraph()
         self.assertDictEqual(g._removeVertex(graphState, 2), {1: [4], 3: list(), 4: [1]})
 
-    @mock.patch('LWWElementGraph.hashObj')
+    @mock.patch('{}.LWWElementGraph.hashObj'.format(SRC_PATH))
     def test_addEdge(self, mockHash):
         ''' Check if _addEdge appends the vertex in the other vertex's adjacency list '''
         mockHash.side_effect = lambda x: x
@@ -169,7 +172,7 @@ class LWWElementGraphTests(TestCase):
         g = LWWElementGraph()
         self.assertDictEqual(g._addEdge(graphState, 1, 2), {1: [2], 2: [1]})
          
-    @mock.patch('LWWElementGraph.hashObj')
+    @mock.patch('{}.LWWElementGraph.hashObj'.format(SRC_PATH))
     def test_removeEdge(self, mockHash):
         ''' Remove edge by deleting the vertice in the other's adjacency list '''
         mockHash.side_effect = lambda x: x
@@ -177,7 +180,7 @@ class LWWElementGraphTests(TestCase):
         g = LWWElementGraph()
         self.assertDictEqual(g._removeEdge(graphState, 1, 2), {1: list(), 2: list()})
 
-    @mock.patch('LWWElementGraph.hashObj')
+    @mock.patch('{}.LWWElementGraph.hashObj'.format(SRC_PATH))
     def test_computeGraph(self, mockHash):
         ''' Check new computed graphState using vertices and edges
             Initialize the vertices first, and then for each edge, add the vertices to 
@@ -222,8 +225,9 @@ class LWWElementGraphTestsComplexObject(TestCase):
         g = LWWElementGraph()
         self.assertDictEqual(g._removeEdge(graphState, a, b), {hashObj(a): list(), hashObj(b): list()})
 
-    @mock.patch('LWWElementGraph.LWWElementGraph.getNeighborsOf')
-    def testFindPathComplexObject(self, mockGetNeighborsOf):
+    @mock.patch('{}.LWWElementSet.LWWElementSet.isMember'.format(SRC_PATH))
+    @mock.patch('{}.LWWElementGraph.LWWElementGraph.getNeighborsOf'.format(SRC_PATH))
+    def testFindPathComplexObject(self, mockGetNeighborsOf, mockIsMember):
         ''' Check if BFS runs correctly for a graph with Complex data type (other than int, str) '''
         a = createComplexObj()
         b = createComplexObj()
@@ -243,5 +247,6 @@ class LWWElementGraphTestsComplexObject(TestCase):
             hashObj(h): [e, f],
         }
         mockGetNeighborsOf.side_effect = lambda x: graph[hashObj(x)]
+        mockIsMember.return_value = True
         g = LWWElementGraph()
         self.assertListEqual(g.findPath(a, h), [a, b, c, e, h])
