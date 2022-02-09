@@ -1,5 +1,5 @@
 import pathlib
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="LWWElementGraph",
-    version="1.0.0",
+    version="1.0.1",
     description="Module for a lightweight LWWElementGraph",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -23,5 +23,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     include_package_data=True,
 )
