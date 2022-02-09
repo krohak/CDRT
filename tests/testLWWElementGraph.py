@@ -130,7 +130,6 @@ class LWWElementGraphTests(TestCase):
         }
         mockGetNeighborsOf.side_effect = lambda x: graph[x]
         mockIsMember.return_value = True
-        print(mockGetNeighborsOf(2))
         g = LWWElementGraph()
         self.assertListEqual(g.findPath(1, 7), [1, 2, 3, 5, 7])
     
