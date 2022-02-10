@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="LWWElementGraph",
-    version="1.0.2",
+    version="1.0.3",
     description="Module for a lightweight LWWElementGraph",
     long_description=README,
     long_description_content_type="text/markdown",
