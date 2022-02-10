@@ -13,7 +13,7 @@ Handles merges in a Last Write Wins Manner.
 ## Install
 
 To install packages, perform:
-`pip install -r requirements.txt`
+`pip install LWWElementGraph`
 
 ## Tests
 - /tests/testLWWElementSet.py
