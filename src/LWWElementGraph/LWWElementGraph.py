@@ -1,5 +1,5 @@
 from collections import defaultdict
-from src.LWWElementGraph.LWWElementSet import LWWElementSet, hashObj
+from .LWWElementSet import LWWElementSet, hashObj
 
 class LWWElementGraph(object):
     
