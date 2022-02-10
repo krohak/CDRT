@@ -1,21 +1,39 @@
-# LWW Element Graph
+# Welcome to LWWElementGraph’s documentation!
+
+# Contents:
+
+
+* [LWWElementGraph package](README.md)
+
+
+    * [Submodules](README.md#submodules)
+
+
+    * [LWWElementGraph.LWWElementGraph module](README.md#module-LWWElementGraph.LWWElementGraph)
+
+
+    * [LWWElementGraph.LWWElementSet module](README.md#module-LWWElementGraph.LWWElementSet)
+
+
+    * [Module contents](README.md#module-LWWElementGraph)
+
+
+# Install
 
 To install packages, perform:
 `pip install -r requirements.txt`
-
-
-## LWWElementSet.py
-
-Module for a lightweight LWWElementSet in Python.
-Handles merges in a Last Write Wins Manner.
 
 ## LWWElementGraph.py
 
 Module for a lightweight LWWElementGraph, which uses LWWElementSet.
 Handles merges in a Last Write Wins Manner.
 
-## tests
-- /tests/context.py
+## LWWElementSet.py
+
+Module for a lightweight LWWElementSet in Python.
+Handles merges in a Last Write Wins Manner.
+
+## Tests
 - /tests/testLWWElementSet.py
 - /tests/testLWWElementGraph.py
 - /tests/testIntegration.py
@@ -26,52 +44,7 @@ Made by [krohak](https://github.com/krohak/)
 
 # LWWElementGraph package
 
-## Submodules
-
-## LWWElementGraph.LWWElementGraph module
-
-## LWWElementGraph.LWWElementSet module
-
-
-### _class_ LWWElementGraph.LWWElementSet.LWWElementSet()
-Bases: `object`
-
-
-#### \__init__()
-Initialize addSet and removeSet to empty dictionary. iData and iTimestamp 
-are the index of the data and timestamp respectively
-
-
-#### addElement(element)
-Adds in the addSet. If element already in addSet, replace timestamp with now()
-
-
-#### getMembers()
-Returns all the valid members. Go through addSet, check if it is a member
-
-
-#### isMember(element)
-Element is a member if it is in addSet, and either not removeSet, 
-or in removeSet but with an earlier timestamp than it’s timestamp in addSet
-
-
-#### mergeSet(selfSet, otherSet)
-Prioritize Last Write. Since elements are in the form (data, datetime), reverse them to
-compare by datetime and take max. Then, reverse back the max and store in merged
-
-
-#### mergeWith(otherLWWElementSet)
-Merge self with otherLWWElementSet in LWW manner
-
-
-#### removeElement(element)
-Adds in the removeSet. Cannot remove if not already in addSet
-
-
-### LWWElementGraph.LWWElementSet.hashObj(data)
-
 ## Module contents
-
 
 ### _class_ LWWElementGraph.LWWElementGraph()
 Bases: `object`
@@ -121,37 +94,43 @@ Runs in O(E) because of _removeEdge
 If vertex is present, then add it to vertices.removeSet. Add each of its edge to 
 edges.removeSet. Also maintains graphState for read optimization.
 Runs in O(E) because of _removeVertex
-<!-- LWWElementGraph documentation master file, created by
-sphinx-quickstart on Thu Feb 10 11:45:22 2022.
-You can adapt this file completely to your liking, but it should at least
-contain the root `toctree` directive. -->
-# Welcome to LWWElementGraph’s documentation!
 
-# Contents:
+## Submodules
 
 
-* [LWWElementGraph package](LWWElementGraph.md)
+## LWWElementGraph.LWWElementSet module
 
 
-    * [Submodules](LWWElementGraph.md#submodules)
+### _class_ LWWElementGraph.LWWElementSet.LWWElementSet()
+Bases: `object`
 
 
-    * [LWWElementGraph.LWWElementGraph module](LWWElementGraph.md#module-LWWElementGraph.LWWElementGraph)
+#### \__init__()
+Initialize addSet and removeSet to empty dictionary. iData and iTimestamp 
+are the index of the data and timestamp respectively
 
 
-    * [LWWElementGraph.LWWElementSet module](LWWElementGraph.md#module-LWWElementGraph.LWWElementSet)
+#### addElement(element)
+Adds in the addSet. If element already in addSet, replace timestamp with now()
 
 
-    * [Module contents](LWWElementGraph.md#module-LWWElementGraph)
+#### getMembers()
+Returns all the valid members. Go through addSet, check if it is a member
 
 
-# Indices and tables
+#### isMember(element)
+Element is a member if it is in addSet, and either not removeSet, 
+or in removeSet but with an earlier timestamp than it’s timestamp in addSet
 
 
-* [Index](genindex.md)
+#### mergeSet(selfSet, otherSet)
+Prioritize Last Write. Since elements are in the form (data, datetime), reverse them to
+compare by datetime and take max. Then, reverse back the max and store in merged
 
 
-* [Module Index](py-modindex.md)
+#### mergeWith(otherLWWElementSet)
+Merge self with otherLWWElementSet in LWW manner
 
 
-* [Search Page](search.md)
+#### removeElement(element)
+Adds in the removeSet. Cannot remove if not already in addSet
