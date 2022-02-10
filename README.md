@@ -1,27 +1,25 @@
 # Welcome to LWWElementGraph’s documentation!
 
-# Install
-
-To install packages, perform:
-`pip install -r requirements.txt`
-
-## LWWElementGraph.py
+## LWWElementGraph
 
 Module for a lightweight LWWElementGraph, which uses LWWElementSet.
 Handles merges in a Last Write Wins Manner.
 
-## LWWElementSet.py
+## LWWElementSet
 
 Module for a lightweight LWWElementSet in Python.
 Handles merges in a Last Write Wins Manner.
+
+## Install
+
+To install packages, perform:
+`pip install -r requirements.txt`
 
 ## Tests
 - /tests/testLWWElementSet.py
 - /tests/testLWWElementGraph.py
 - /tests/testIntegration.py
 
-
-Made by [krohak](https://github.com/krohak/)
 
 # Contents:
 
@@ -128,3 +126,6 @@ Merge self with otherLWWElementSet in LWW manner
 
 #### removeElement(element)
 Adds in the removeSet. Cannot remove if not already in addSet
+
+---
+### Made by [krohak](https://github.com/krohak/)
