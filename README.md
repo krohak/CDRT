@@ -1,23 +1,5 @@
 # Welcome to LWWElementGraph’s documentation!
 
-# Contents:
-
-
-* [LWWElementGraph package](README.md)
-
-
-    * [Submodules](README.md#submodules)
-
-
-    * [LWWElementGraph.LWWElementGraph module](README.md#module-LWWElementGraph.LWWElementGraph)
-
-
-    * [LWWElementGraph.LWWElementSet module](README.md#module-LWWElementGraph.LWWElementSet)
-
-
-    * [Module contents](README.md#module-LWWElementGraph)
-
-
 # Install
 
 To install packages, perform:
@@ -40,6 +22,18 @@ Handles merges in a Last Write Wins Manner.
 
 
 Made by [krohak](https://github.com/krohak/)
+
+# Contents:
+
+* [LWWElementGraph package](README.md#lwwelementgraph-package)
+
+    * [Module contents](README.md#module-contents)
+
+        * [LWWElementGraph.LWWElementGraph module](README.md#class-lwwelementgraphlwwelementgraph)
+
+    * [Submodules](README.md#submodules)
+
+        * [LWWElementGraph.LWWElementSet module](README.md#lwwelementgraphlwwelementset-module)
 
 
 # LWWElementGraph package
