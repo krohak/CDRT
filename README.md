@@ -23,15 +23,15 @@ To install packages, perform:
 
 # Contents:
 
-* [LWWElementGraph package](README.md#lwwelementgraph-package)
+* [LWWElementGraph package](#lwwelementgraph-package)
 
-    * [Module contents](README.md#module-contents)
+    * [Module contents](#module-contents)
 
-        * [LWWElementGraph.LWWElementGraph module](README.md#class-lwwelementgraphlwwelementgraph)
+        * [LWWElementGraph.LWWElementGraph module](#class-lwwelementgraphlwwelementgraph)
 
-    * [Submodules](README.md#submodules)
+    * [Submodules](#submodules)
 
-        * [LWWElementGraph.LWWElementSet module](README.md#lwwelementgraphlwwelementset-module)
+        * [LWWElementGraph.LWWElementSet module](#lwwelementgraphlwwelementset-module)
 
 
 # LWWElementGraph package
